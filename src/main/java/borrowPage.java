@@ -80,6 +80,12 @@ public class borrowPage extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(bookTable);
+        if (bookTable.getColumnModel().getColumnCount() > 0) {
+            bookTable.getColumnModel().getColumn(0).setResizable(false);
+            bookTable.getColumnModel().getColumn(1).setResizable(false);
+            bookTable.getColumnModel().getColumn(2).setResizable(false);
+            bookTable.getColumnModel().getColumn(3).setResizable(false);
+        }
 
         nameOfBorrower.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
