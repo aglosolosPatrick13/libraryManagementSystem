@@ -44,6 +44,7 @@ public class homePage extends javax.swing.JFrame {
         btnNotice = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(51, 255, 255));
 
         searchBar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
@@ -200,29 +201,32 @@ public class homePage extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        try {
-        // This pops up a small window asking for each detail
+       try {
+        // 1. Get ID
         String idStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Book ID:");
-        if (idStr == null) return; // User pressed cancel
+        if (idStr == null) return; 
         
+        // 2. Get Title
         String name = javax.swing.JOptionPane.showInputDialog(this, "Enter Book Title:");
         if (name == null) return;
         
+        // 3. Get Author
         String author = javax.swing.JOptionPane.showInputDialog(this, "Enter Author:");
         if (author == null) return;
         
+        // 4. Get Genre (The missing piece!)
+        String genre = javax.swing.JOptionPane.showInputDialog(this, "Enter Genre:");
+        if (genre == null) return;
+        
+        // 5. Get Year
         String yearStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Year:");
         if (yearStr == null) return;
-        
-        String genreStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Genre:");
-        if (genreStr == null) return;
 
-        // Convert the strings to numbers
         int id = Integer.parseInt(idStr);
         int year = Integer.parseInt(yearStr);
 
-        // Send to your DatabaseHandler
-        DatabaseHandler.addBook(id, name, author, year);
+        // This call MUST match the 5 parameters in your DatabaseHandler
+        DatabaseHandler.addBook(id, name, author, genre, year);
 
         // Refresh the table
         DatabaseHandler.searchAndLoadTable(bookTable, "");
