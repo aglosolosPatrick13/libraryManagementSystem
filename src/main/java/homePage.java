@@ -20,6 +20,7 @@ public class homePage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         DatabaseHandler.searchAndLoadTable(bookTable, "");
+        DatabaseHandler.initializeDatabase();
     }
 
     /**

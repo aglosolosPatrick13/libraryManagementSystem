@@ -95,16 +95,32 @@ public class returnPage extends javax.swing.JFrame {
 
         tableBook.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Book ID", "Title", "Author", "Year", "Genre", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tableBook);
+        if (tableBook.getColumnModel().getColumnCount() > 0) {
+            tableBook.getColumnModel().getColumn(0).setResizable(false);
+            tableBook.getColumnModel().getColumn(1).setResizable(false);
+            tableBook.getColumnModel().getColumn(2).setResizable(false);
+            tableBook.getColumnModel().getColumn(3).setResizable(false);
+            tableBook.getColumnModel().getColumn(4).setResizable(false);
+            tableBook.getColumnModel().getColumn(5).setResizable(false);
+        }
 
         btnReturn.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnReturn.setText("Return");

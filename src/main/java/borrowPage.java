@@ -74,17 +74,17 @@ public class borrowPage extends javax.swing.JFrame {
 
         bookTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Book ID", "Title ", "Author", "Year", "Status"
+                "Book ID", "Title ", "Author", "Year", "Genre", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -98,6 +98,8 @@ public class borrowPage extends javax.swing.JFrame {
             bookTable.getColumnModel().getColumn(1).setResizable(false);
             bookTable.getColumnModel().getColumn(2).setResizable(false);
             bookTable.getColumnModel().getColumn(3).setResizable(false);
+            bookTable.getColumnModel().getColumn(4).setResizable(false);
+            bookTable.getColumnModel().getColumn(5).setResizable(false);
         }
 
         nameOfBorrower.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N

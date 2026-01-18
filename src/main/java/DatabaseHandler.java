@@ -11,13 +11,21 @@ public class DatabaseHandler {
         return DriverManager.getConnection(URL);
     }
 
+    /**
+     * Prints the absolute path of the database to the console 
+     * so you can find the exact file to delete if needed.
+     */
+    public static void printDatabasePath() {
+        java.io.File file = new java.io.File("library_db.db");
+        System.out.println("DATABASE LOCATION: " + file.getAbsolutePath());
+    }
+
     public static void initializeDatabase() {
-        // Updated to include 'genre' column
         String sql = "CREATE TABLE IF NOT EXISTS books ("
                 + "id INTEGER PRIMARY KEY,"
                 + "name TEXT NOT NULL,"
                 + "author TEXT,"
-                + "genre TEXT," // Added Genre column
+                + "genre TEXT," 
                 + "year INTEGER,"
                 + "status TEXT DEFAULT 'Available',"
                 + "borrower_name TEXT,"
@@ -26,34 +34,23 @@ public class DatabaseHandler {
         
         try (Connection conn = connect(); Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
+            
+            // FORCED COLUMN ADDITION: This ensures the 'genre' column exists 
+            // even if the file was created by an older version of your code.
+            try {
+                stmt.execute("ALTER TABLE books ADD COLUMN genre TEXT;");
+                System.out.println("Database updated: Genre column added.");
+            } catch (SQLException e) {
+                // Error is ignored because it means the column already exists
+            }
         } catch (SQLException e) {
             System.out.println("DB Init Error: " + e.getMessage());
         }
     }
 
-    // --- NEW FILTERING METHODS FOR YOUR PAGES ---
-
-    /**
-     * For Borrow Page: Filters by Status = 'Available'
-     */
-    public static void loadAvailableBooks(JTable table, String keyword) {
-        String sql = "SELECT * FROM books WHERE status = 'Available' AND (name LIKE ? OR author LIKE ? OR id LIKE ?)";
-        loadFilteredTable(table, sql, keyword);
-    }
-
-    /**
-     * For Return Page: Filters by Status = 'Borrowed'
-     */
-    public static void loadBorrowedBooks(JTable table, String keyword) {
-        String sql = "SELECT * FROM books WHERE status = 'Borrowed' AND (name LIKE ? OR author LIKE ? OR id LIKE ?)";
-        loadFilteredTable(table, sql, keyword);
-    }
-
-    /**
-     * Helper method to handle the table loading logic for filtered views
-     */
     private static void loadFilteredTable(JTable table, String sql, String keyword) {
-        String[] columns = {"Book ID", "Book Name", "Author", "Year", "Status"};
+        // FIXED: Added "Genre" to the header array (Total 6 columns)
+        String[] columns = {"Book ID", "Book Name", "Author", "Genre", "Year", "Status"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
 
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -63,10 +60,12 @@ public class DatabaseHandler {
             
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
+                // FIXED: Row data now matches the 6 headers above
                 model.addRow(new Object[]{
                     rs.getInt("id"),
                     rs.getString("name"),
                     rs.getString("author"),
+                    rs.getString("genre"), 
                     rs.getInt("year"),
                     rs.getString("status")
                 });
@@ -77,7 +76,15 @@ public class DatabaseHandler {
         }
     }
 
-    // --- UPDATED ADD BOOK (Includes Genre) ---
+    public static void loadAvailableBooks(JTable table, String keyword) {
+        String sql = "SELECT * FROM books WHERE status = 'Available' AND (name LIKE ? OR author LIKE ? OR id LIKE ?)";
+        loadFilteredTable(table, sql, keyword);
+    }
+
+    public static void loadBorrowedBooks(JTable table, String keyword) {
+        String sql = "SELECT * FROM books WHERE status = 'Borrowed' AND (name LIKE ? OR author LIKE ? OR id LIKE ?)";
+        loadFilteredTable(table, sql, keyword);
+    }
 
     public static void addBook(int id, String name, String author, String genre, int year) {
         String sql = "INSERT INTO books(id, name, author, genre, year, status) VALUES(?,?,?,?,?,'Available')";
@@ -93,47 +100,21 @@ public class DatabaseHandler {
         }
     }
 
-    // --- HEAPSORT CORE LOGIC ---
-    
-    public static void heapSort(Object[][] data, int column) {
-        int n = data.length;
-        for (int i = n / 2 - 1; i >= 0; i--) heapify(data, n, i, column);
-        for (int i = n - 1; i > 0; i--) {
-            Object[] temp = data[0];
-            data[0] = data[i];
-            data[i] = temp;
-            heapify(data, i, 0, column);
-        }
-    }
-
-    private static void heapify(Object[][] data, int n, int i, int column) {
-        int largest = i;
-        int l = 2 * i + 1;
-        int r = 2 * i + 2;
-        if (l < n && compare(data[l][column], data[largest][column]) > 0) largest = l;
-        if (r < n && compare(data[r][column], data[largest][column]) > 0) largest = r;
-        if (largest != i) {
-            Object[] swap = data[i];
-            data[i] = data[largest];
-            data[largest] = swap;
-            heapify(data, n, largest, column);
-        }
-    }
-
-    private static int compare(Object o1, Object o2) {
-        if (o1 == null) return -1;
-        if (o2 == null) return 1;
-        if (o1 instanceof Integer && o2 instanceof Integer) return ((Integer) o1).compareTo((Integer) o2);
-        return o1.toString().compareToIgnoreCase(o2.toString());
-    }
-
     public static void loadSortedTable(JTable table, int sortColumnIndex) {
         String sql = "SELECT * FROM books";
-        String[] columns = {"Book ID", "Book Name", "Author", "Year", "Status"};
+        // FIXED: Added "Genre" to header array
+        String[] columns = {"Book ID", "Book Name", "Author", "Genre", "Year", "Status"};
         try (Connection conn = connect(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             List<Object[]> dataList = new ArrayList<>();
             while (rs.next()) {
-                dataList.add(new Object[]{rs.getInt("id"), rs.getString("name"), rs.getString("author"), rs.getInt("year"), rs.getString("status")});
+                dataList.add(new Object[]{
+                    rs.getInt("id"), 
+                    rs.getString("name"), 
+                    rs.getString("author"), 
+                    rs.getString("genre"), 
+                    rs.getInt("year"), 
+                    rs.getString("status")
+                });
             }
             Object[][] data = dataList.toArray(new Object[0][]);
             if (data.length > 0) heapSort(data, sortColumnIndex);
@@ -179,5 +160,38 @@ public class DatabaseHandler {
         } catch (SQLException e) {
             System.out.println("Remove Error: " + e.getMessage());
         }
+    }
+
+    // --- HEAPSORT LOGIC ---
+    public static void heapSort(Object[][] data, int column) {
+        int n = data.length;
+        for (int i = n / 2 - 1; i >= 0; i--) heapify(data, n, i, column);
+        for (int i = n - 1; i > 0; i--) {
+            Object[] temp = data[0];
+            data[0] = data[i];
+            data[i] = temp;
+            heapify(data, i, 0, column);
+        }
+    }
+
+    private static void heapify(Object[][] data, int n, int i, int column) {
+        int largest = i;
+        int l = 2 * i + 1;
+        int r = 2 * i + 2;
+        if (l < n && compare(data[l][column], data[largest][column]) > 0) largest = l;
+        if (r < n && compare(data[r][column], data[largest][column]) > 0) largest = r;
+        if (largest != i) {
+            Object[] swap = data[i];
+            data[i] = data[largest];
+            data[largest] = swap;
+            heapify(data, n, largest, column);
+        }
+    }
+
+    private static int compare(Object o1, Object o2) {
+        if (o1 == null) return -1;
+        if (o2 == null) return 1;
+        if (o1 instanceof Integer && o2 instanceof Integer) return ((Integer) o1).compareTo((Integer) o2);
+        return o1.toString().compareToIgnoreCase(o2.toString());
     }
 }
