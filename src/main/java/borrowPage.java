@@ -15,7 +15,8 @@ public class borrowPage extends javax.swing.JFrame {
      * Creates new form borrowPage
      */
     public borrowPage() {
-        initComponents();setResizable(false);
+        initComponents();
+        setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -39,7 +40,7 @@ public class borrowPage extends javax.swing.JFrame {
 
     // Fill Years
     cbYear.removeAllItems();
-    for (int i = 2024; i <= 2030; i++) {
+    for (int i = 2025; i <= 2026; i++) {
         cbYear.addItem(String.valueOf(i));
     }
 }
@@ -186,27 +187,27 @@ public class borrowPage extends javax.swing.JFrame {
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
         // TODO add your handling code hereint selectedRow = tblBooks.getSelectedRow();
-    int selectedRow = bookTable.getSelectedRow(); 
+   int selectedRow = bookTable.getSelectedRow(); 
 
     if (selectedRow != -1) {
-        // 2. Get the Book ID (Column 0)
+        // 1. Get ID from table
         int id = (int) bookTable.getValueAt(selectedRow, 0);
 
-        // 3. Get User Info from your new TextFields
+        // 2. Get info from your TextFields (Make sure names match Design tab)
         String borrowerName = nameOfBorrower.getText(); 
-        String program = programOfTheBorrower.getText();   
+        String borrowerProgram = programOfTheBorrower.getText();   
 
-        // 4. Get Date from your Combo Boxes
+        // 3. Construct Date from ComboBoxes
         String dateStr = cbDate.getSelectedItem() + " " + 
                          cbMonth.getSelectedItem() + " " + 
                          cbYear.getSelectedItem();
 
-        // 5. Call the NEW DatabaseHandler (Must have 4 arguments)
-        DatabaseHandler.borrowBook(id, borrowerName, program, dateStr);
+        // 4. FIX: Pass all 4 pieces of data to the updated handler
+        DatabaseHandler.borrowBook(id, borrowerName, borrowerProgram, dateStr);
 
-        // 6. Refresh and show success
+        // Refresh and notify
         DatabaseHandler.searchAndLoadTable(bookTable, "");
-        javax.swing.JOptionPane.showMessageDialog(this, "Borrowed successfully by " + borrowerName);
+        javax.swing.JOptionPane.showMessageDialog(this, "Book Borrowed by " + borrowerName);
         
     } else {
         javax.swing.JOptionPane.showMessageDialog(this, "Please select a book first!");

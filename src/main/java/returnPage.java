@@ -20,7 +20,29 @@ public class returnPage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        populateDateSelectors();
     }
+     private void populateDateSelectors() {
+    // Fill Days 1 to 31
+    cbDate.removeAllItems();
+    for (int i = 1; i <= 31; i++) {
+        cbDate.addItem(String.valueOf(i));
+    }
+
+    // Fill Months
+    cbMonth.removeAllItems();
+    String[] months = {"January", "February", "March", "April", "May", "June", 
+                       "July", "August", "September", "October", "November", "December"};
+    for (String m : months) {
+        cbMonth.addItem(m);
+    }
+
+    // Fill Years
+    cbYear.removeAllItems();
+    for (int i = 2025; i <= 2026; i++) {
+        cbYear.addItem(String.valueOf(i));
+    }
+     }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,13 +54,13 @@ public class returnPage extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        name = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        program = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        dateBox = new javax.swing.JComboBox<>();
-        monthBox = new javax.swing.JComboBox<>();
-        yearBox = new javax.swing.JComboBox<>();
+        cbDate = new javax.swing.JComboBox<>();
+        cbMonth = new javax.swing.JComboBox<>();
+        cbYear = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableBook = new javax.swing.JTable();
         btnReturn = new javax.swing.JButton();
@@ -49,24 +71,24 @@ public class returnPage extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setText("Name:");
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        name.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Program:");
 
-        jTextField2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        program.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel2.setText("Returned Date:");
 
-        dateBox.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        dateBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Date" }));
+        cbDate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cbDate.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Date" }));
 
-        monthBox.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        monthBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Month" }));
+        cbMonth.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cbMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Month" }));
 
-        yearBox.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        yearBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Year" }));
+        cbYear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cbYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Year" }));
 
         tableBook.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,17 +128,17 @@ public class returnPage extends javax.swing.JFrame {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(2, 2, 2)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(program, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(monthBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(yearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(38, 38, 38)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -132,19 +154,19 @@ public class returnPage extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(program, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(dateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(monthBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(yearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                    .addComponent(cbDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -158,17 +180,23 @@ public class returnPage extends javax.swing.JFrame {
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tableBook.getSelectedRow();
-    
+    int selectedRow = tableBook.getSelectedRow(); 
+
     if (selectedRow != -1) {
+        // 1. Get the Book ID
         int id = (int) tableBook.getValueAt(selectedRow, 0);
-        
+
+        // 2. FIX: Call the returnBook method (it only needs the ID)
         DatabaseHandler.returnBook(id);
-        
+
+        // 3. Refresh the table and clear inputs
         DatabaseHandler.searchAndLoadTable(tableBook, "");
+        name.setText("");
+        program.setText("");
+        
         javax.swing.JOptionPane.showMessageDialog(this, "Book returned successfully!");
     } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Select a book to return.");
+        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book to return.");
     }
     }//GEN-LAST:event_btnReturnActionPerformed
 
@@ -205,15 +233,15 @@ public class returnPage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnReturn;
-    private javax.swing.JComboBox<String> dateBox;
+    private javax.swing.JComboBox<String> cbDate;
+    private javax.swing.JComboBox<String> cbMonth;
+    private javax.swing.JComboBox<String> cbYear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JComboBox<String> monthBox;
+    private javax.swing.JTextField name;
+    private javax.swing.JTextField program;
     private javax.swing.JTable tableBook;
-    private javax.swing.JComboBox<String> yearBox;
     // End of variables declaration//GEN-END:variables
 }
