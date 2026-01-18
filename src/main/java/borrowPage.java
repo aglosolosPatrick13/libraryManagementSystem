@@ -20,6 +20,7 @@ public class borrowPage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        DatabaseHandler.searchAndLoadTable(bookTable, "");
         populateDateSelectors();
         
     }
@@ -71,15 +72,24 @@ public class borrowPage extends javax.swing.JFrame {
 
         bookTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Book ID", "Title ", "Author", "Year", "Status"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        bookTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(bookTable);
         if (bookTable.getColumnModel().getColumnCount() > 0) {
             bookTable.getColumnModel().getColumn(0).setResizable(false);
@@ -187,30 +197,38 @@ public class borrowPage extends javax.swing.JFrame {
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
         // TODO add your handling code hereint selectedRow = tblBooks.getSelectedRow();
-   int selectedRow = bookTable.getSelectedRow(); 
+  int selectedRow = bookTable.getSelectedRow(); 
 
     if (selectedRow != -1) {
         // 1. Get ID from table
         int id = (int) bookTable.getValueAt(selectedRow, 0);
 
-        // 2. Get info from your TextFields (Make sure names match Design tab)
-        String borrowerName = nameOfBorrower.getText(); 
-        String borrowerProgram = programOfTheBorrower.getText();   
+        // 2. Validation: Ensure name and program aren't empty
+        String borrowerName = nameOfBorrower.getText().trim(); 
+        String borrowerProgram = programOfTheBorrower.getText().trim();   
 
-        // 3. Construct Date from ComboBoxes
+        if(borrowerName.isEmpty() || borrowerProgram.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please enter Borrower Name and Program!");
+            return;
+        }
+
+        // 3. Construct Date
         String dateStr = cbDate.getSelectedItem() + " " + 
                          cbMonth.getSelectedItem() + " " + 
                          cbYear.getSelectedItem();
 
-        // 4. FIX: Pass all 4 pieces of data to the updated handler
+        // 4. Execute Borrow
         DatabaseHandler.borrowBook(id, borrowerName, borrowerProgram, dateStr);
 
-        // Refresh and notify
+        // 5. Refresh Table & Clear Fields
         DatabaseHandler.searchAndLoadTable(bookTable, "");
-        javax.swing.JOptionPane.showMessageDialog(this, "Book Borrowed by " + borrowerName);
+        nameOfBorrower.setText("");
+        programOfTheBorrower.setText("");
+        
+        javax.swing.JOptionPane.showMessageDialog(this, "Book Borrowed successfully by " + borrowerName);
         
     } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book first!");
+        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first!");
     }
     }//GEN-LAST:event_btnBorrowActionPerformed
 

@@ -18,8 +18,8 @@ public class homePage extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(HIDE_ON_CLOSE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        DatabaseHandler.searchAndLoadTable(bookTable, "");
     }
 
     /**
@@ -54,33 +54,38 @@ public class homePage extends javax.swing.JFrame {
         bookTable.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         bookTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Book ID", "Title", "Author", "Year"
+                "Book ID", "Title", "Author", "Year", "Genre", "Status"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        bookTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(bookTable);
         if (bookTable.getColumnModel().getColumnCount() > 0) {
             bookTable.getColumnModel().getColumn(0).setResizable(false);
-            bookTable.getColumnModel().getColumn(0).setPreferredWidth(250);
+            bookTable.getColumnModel().getColumn(0).setPreferredWidth(200);
             bookTable.getColumnModel().getColumn(1).setResizable(false);
-            bookTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+            bookTable.getColumnModel().getColumn(1).setPreferredWidth(200);
             bookTable.getColumnModel().getColumn(2).setResizable(false);
-            bookTable.getColumnModel().getColumn(2).setPreferredWidth(250);
+            bookTable.getColumnModel().getColumn(2).setPreferredWidth(200);
             bookTable.getColumnModel().getColumn(3).setResizable(false);
-            bookTable.getColumnModel().getColumn(3).setPreferredWidth(250);
+            bookTable.getColumnModel().getColumn(3).setPreferredWidth(200);
+            bookTable.getColumnModel().getColumn(4).setResizable(false);
+            bookTable.getColumnModel().getColumn(4).setPreferredWidth(200);
+            bookTable.getColumnModel().getColumn(5).setResizable(false);
+            bookTable.getColumnModel().getColumn(5).setPreferredWidth(200);
         }
 
         btnBorrow.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -189,55 +194,69 @@ public class homePage extends javax.swing.JFrame {
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
         // Get text from your search bar (replace txtSearch with your variable name)
-    String searchKeyword = btnSearch.getText();
-    
-    // Call the database logic and pass your table (replace tblBooks with your table name)
+    String searchKeyword = searchBar.getText();
     DatabaseHandler.searchAndLoadTable(bookTable, searchKeyword);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         try {
-        // Capture data from your TextFields
-        int id = Integer.parseInt(searchBar.getText()); 
-        String name = searchBar.getText();
-        String author = searchBar.getText();
-        int year = Integer.parseInt(searchBar.getText());
+        // This pops up a small window asking for each detail
+        String idStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Book ID:");
+        if (idStr == null) return; // User pressed cancel
+        
+        String name = javax.swing.JOptionPane.showInputDialog(this, "Enter Book Title:");
+        if (name == null) return;
+        
+        String author = javax.swing.JOptionPane.showInputDialog(this, "Enter Author:");
+        if (author == null) return;
+        
+        String yearStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Year:");
+        if (yearStr == null) return;
+        
+        String genreStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Genre:");
+        if (genreStr == null) return;
 
-        // Call the DatabaseHandler method
+        // Convert the strings to numbers
+        int id = Integer.parseInt(idStr);
+        int year = Integer.parseInt(yearStr);
+
+        // Send to your DatabaseHandler
         DatabaseHandler.addBook(id, name, author, year);
 
-        // Refresh the table and clear fields
+        // Refresh the table
         DatabaseHandler.searchAndLoadTable(bookTable, "");
         javax.swing.JOptionPane.showMessageDialog(this, "Book added successfully!");
         
-        searchBar.setText(""); searchBar.setText(""); searchBar.setText(""); searchBar.setText("");
     } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please enter valid numbers for ID and Year.");
+        javax.swing.JOptionPane.showMessageDialog(this, "Error: ID and Year must be numbers.");
     }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
         // TODO add your handling code here:int selectedRow = tblBooks.getSelectedRow();
-    int selectedRow = bookTable.getSelectedRow(); 
+   int selectedRow = bookTable.getSelectedRow(); 
 
     if (selectedRow != -1) {
         int id = (int) bookTable.getValueAt(selectedRow, 0);
         
-        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Are you sure you want to delete this book?");
+        int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to delete this book?", "Confirm Deletion", 
+                javax.swing.JOptionPane.YES_NO_OPTION);
         
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
             DatabaseHandler.removeBook(id);
-            // Refresh table
             DatabaseHandler.searchAndLoadTable(bookTable, "");
+            javax.swing.JOptionPane.showMessageDialog(this, "Book deleted.");
         }
     } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Select a book to remove.");
+        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first.");
     }
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void btnSortActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortActionPerformed
         // TODO add your handling code here:
+        DatabaseHandler.searchAndLoadTable(bookTable, "");
         DatabaseHandler.loadSortedTable(bookTable, 1);
     
     javax.swing.JOptionPane.showMessageDialog(this, "Refreshed");
@@ -268,7 +287,7 @@ public class homePage extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        DatabaseHandler.initializeDatabase();
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new homePage().setVisible(true));
     }

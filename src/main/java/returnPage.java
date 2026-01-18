@@ -20,6 +20,7 @@ public class returnPage extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        DatabaseHandler.searchAndLoadTable(tableBook, "");
         populateDateSelectors();
     }
      private void populateDateSelectors() {
@@ -180,23 +181,25 @@ public class returnPage extends javax.swing.JFrame {
 
     private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
         // TODO add your handling code here:
-    int selectedRow = tableBook.getSelectedRow(); 
+   int selectedRow = tableBook.getSelectedRow(); 
 
     if (selectedRow != -1) {
-        // 1. Get the Book ID
+        // 1. Get the Book ID (Assuming ID is in the first column)
         int id = (int) tableBook.getValueAt(selectedRow, 0);
 
-        // 2. FIX: Call the returnBook method (it only needs the ID)
+        // 2. Execute the return in the database
         DatabaseHandler.returnBook(id);
 
-        // 3. Refresh the table and clear inputs
+        // 3. Refresh the table to remove the returned book from the view
         DatabaseHandler.searchAndLoadTable(tableBook, "");
+        
+        // 4. Reset UI elements
         name.setText("");
         program.setText("");
         
-        javax.swing.JOptionPane.showMessageDialog(this, "Book returned successfully!");
+        javax.swing.JOptionPane.showMessageDialog(this, "Book ID " + id + " returned successfully!");
     } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book to return.");
+        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table to return.");
     }
     }//GEN-LAST:event_btnReturnActionPerformed
 
