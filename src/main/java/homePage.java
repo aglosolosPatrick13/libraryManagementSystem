@@ -210,43 +210,45 @@ public class homePage extends javax.swing.JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
        try {
-        String idStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Book ID:");
-        if (idStr == null) return; 
+        String id = javax.swing.JOptionPane.showInputDialog(this, "Enter Book ID:");
+        if (id == null || id.trim().isEmpty()) return; 
         
         String name = javax.swing.JOptionPane.showInputDialog(this, "Enter Book Title:");
-        if (name == null) return;
+        if (name == null || name.trim().isEmpty()) return;
         
         String author = javax.swing.JOptionPane.showInputDialog(this, "Enter Author:");
-        if (author == null) return;
+        if (author == null) author = "Unknown";
 
         String genre = javax.swing.JOptionPane.showInputDialog(this, "Enter Genre:");
-        if (genre == null) return;
+        if (genre == null) genre = "General";
 
         String yearStr = javax.swing.JOptionPane.showInputDialog(this, "Enter Year:");
         if (yearStr == null) return;
 
-        int id = Integer.parseInt(idStr);
+        // ID is now a String, so we only parse the Year
         int year = Integer.parseInt(yearStr);
 
+        // Call the updated DatabaseHandler method
         DatabaseHandler.addBook(id, name, author, genre, year);
 
         DatabaseHandler.searchAndLoadTable(bookTable, "");
         javax.swing.JOptionPane.showMessageDialog(this, "Book added successfully!");
         
     } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Error: ID and Year must be numbers.");
+        javax.swing.JOptionPane.showMessageDialog(this, "Error: Year must be a number.");
     }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
         // TODO add your handling code here:int selectedRow = tblBooks.getSelectedRow();
-   int selectedRow = bookTable.getSelectedRow(); 
+  int selectedRow = bookTable.getSelectedRow(); 
 
     if (selectedRow != -1) {
-        int id = (int) bookTable.getValueAt(selectedRow, 0);
+        // Get the ID as a String to handle ISBNs
+        String id = bookTable.getValueAt(selectedRow, 0).toString();
         
         int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
-                "Are you sure you want to delete this book?", "Confirm Deletion", 
+                "Are you sure you want to delete Book ID: " + id + "?", "Confirm Deletion", 
                 javax.swing.JOptionPane.YES_NO_OPTION);
         
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {

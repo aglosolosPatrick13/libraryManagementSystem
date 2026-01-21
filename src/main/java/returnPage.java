@@ -218,13 +218,16 @@ public class returnPage extends javax.swing.JFrame {
    int selectedRow = tableBook.getSelectedRow(); 
 
     if (selectedRow != -1) {
+        // 1. Get the ID as a String instead of an int
+        String id = tableBook.getValueAt(selectedRow, 0).toString();
 
-        int id = (int) tableBook.getValueAt(selectedRow, 0);
-
+        // 2. Call the updated return method
         DatabaseHandler.returnBook(id);
 
-        DatabaseHandler.searchAndLoadTable(tableBook, "");
+        // 3. Refresh the table to show ONLY currently borrowed books
+        DatabaseHandler.loadBorrowedBooks(tableBook, "");
 
+        // 4. Clear the text fields
         name.setText("");
         program.setText("");
         

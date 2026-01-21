@@ -216,11 +216,11 @@ public class borrowPage extends javax.swing.JFrame {
   int selectedRow = bookTable.getSelectedRow(); 
 
     if (selectedRow != -1) {
-
-        int id = (int) bookTable.getValueAt(selectedRow, 0);
+        // 1. Get the ID as a String instead of an int
+        String id = bookTable.getValueAt(selectedRow, 0).toString();
 
         String borrowerName = nameOfBorrower.getText().trim(); 
-        String borrowerProgram = programOfTheBorrower.getText().trim();   
+        String borrowerProgram = programOfTheBorrower.getText().trim();    
 
         if(borrowerName.isEmpty() || borrowerProgram.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "Please enter Borrower Name and Program!");
@@ -231,13 +231,17 @@ public class borrowPage extends javax.swing.JFrame {
                          cbMonth.getSelectedItem() + " " + 
                          cbYear.getSelectedItem();
 
+        // 2. Call the updated borrow method
         DatabaseHandler.borrowBook(id, borrowerName, borrowerProgram, dateStr);
 
-        DatabaseHandler.searchAndLoadTable(bookTable, "");
+        // 3. Refresh the table to show only the remaining AVAILABLE books
+        DatabaseHandler.loadAvailableBooks(bookTable, "");
+        
+        // 4. Clear the text fields
         nameOfBorrower.setText("");
         programOfTheBorrower.setText("");
         
-        javax.swing.JOptionPane.showMessageDialog(this, "Borrowed successfully by " + borrowerName);
+        javax.swing.JOptionPane.showMessageDialog(this, "Book ID " + id + " borrowed successfully by " + borrowerName);
         
     } else {
         javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first!");
