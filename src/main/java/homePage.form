@@ -256,7 +256,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="V1.1"/>
+        <Property name="text" type="java.lang.String" value="V1.2"/>
       </Properties>
     </Component>
   </SubComponents>

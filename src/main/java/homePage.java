@@ -119,7 +119,7 @@ public class homePage extends javax.swing.JFrame {
         btnNotice.setText("...");
         btnNotice.addActionListener(this::btnNoticeActionPerformed);
 
-        jLabel1.setText("V1.1");
+        jLabel1.setText("V1.2");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

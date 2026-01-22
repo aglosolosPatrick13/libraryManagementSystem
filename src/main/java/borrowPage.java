@@ -4,13 +4,14 @@
  */
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Patrick
  */
 public class borrowPage extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(borrowPage.class.getName());
+   private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(borrowPage.class.getName());
 
     /**
      * Creates new form borrowPage
@@ -19,32 +20,12 @@ public class borrowPage extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(HIDE_ON_CLOSE);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        // Changed to DISPOSE so it doesn't close the whole app
+        setDefaultCloseOperation(EXIT_ON_CLOSE); 
         DatabaseHandler.loadAvailableBooks(bookTable, "");
-        populateDateSelectors();
-        
     }
-    private void populateDateSelectors() {
     
-   cbDate.removeAllItems();
-    for (int i = 1; i <= 31; i++) {
-        cbDate.addItem(String.valueOf(i));
-    }
 
-       cbMonth.removeAllItems();
-    String[] months = {"January", "February", "March", "April", "May", "June", 
-                       "July", "August", "September", "October", "November", "December"};
-    for (String m : months) {
-        cbMonth.addItem(m);
-    }
-
-    cbYear.removeAllItems();
-    // Adjusted to current and next year
-    for (int i = 2025; i <= 2026; i++) {
-        cbYear.addItem(String.valueOf(i));
-    }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -57,14 +38,6 @@ public class borrowPage extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         bookTable = new javax.swing.JTable();
-        nameOfBorrower = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        cbDate = new javax.swing.JComboBox<>();
-        cbMonth = new javax.swing.JComboBox<>();
-        cbYear = new javax.swing.JComboBox<>();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        programOfTheBorrower = new javax.swing.JTextField();
         btnBorrow = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         txtFBorrow = new javax.swing.JTextField();
@@ -102,28 +75,6 @@ public class borrowPage extends javax.swing.JFrame {
             bookTable.getColumnModel().getColumn(5).setResizable(false);
         }
 
-        nameOfBorrower.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Name:");
-
-        cbDate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        cbDate.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Date:" }));
-
-        cbMonth.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        cbMonth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Month:" }));
-
-        cbYear.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        cbYear.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Year" }));
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setText("Borrowed Date:");
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel3.setText("Program:");
-
-        programOfTheBorrower.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-
         btnBorrow.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnBorrow.setText("Borrow");
         btnBorrow.addActionListener(this::btnBorrowActionPerformed);
@@ -141,44 +92,19 @@ public class borrowPage extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 573, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(2, 2, 2)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(nameOfBorrower, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(programOfTheBorrower, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnSearch)
+                        .addGap(26, 26, 26)
+                        .addComponent(txtFBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 540, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(85, 85, 85)
+                        .addGap(130, 130, 130)
                         .addComponent(btnBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(153, 153, 153)
+                        .addGap(115, 115, 115)
                         .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(57, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnSearch)
-                .addGap(18, 18, 18)
-                .addComponent(txtFBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(24, 24, 24))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -187,80 +113,41 @@ public class borrowPage extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtFBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearch))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(68, 68, 68)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameOfBorrower, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(programOfTheBorrower, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(cbDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnBorrow, javax.swing.GroupLayout.DEFAULT_SIZE, 44, Short.MAX_VALUE)
-                    .addComponent(btnCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(48, 48, 48))
+                    .addComponent(btnBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(104, 104, 104))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
-        // TODO add your handling code hereint selectedRow = tblBooks.getSelectedRow();
- int selectedRow = bookTable.getSelectedRow(); 
+        // TODO add your handling code here:
+   int selectedRow = bookTable.getSelectedRow(); 
 
         if (selectedRow != -1) {
             String id = bookTable.getValueAt(selectedRow, 0).toString();
-            String borrowerName = nameOfBorrower.getText().trim(); 
-            String borrowerProgram = programOfTheBorrower.getText().trim();    
+            String borrower = userSession.currentUsername;
+            String program = userSession.currentUserProgram;
 
-            if(borrowerName.isEmpty() || borrowerProgram.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Please enter Borrower Name and Program!");
-                return;
-            }
+            // AUTOMATIC 7-DAY LOGIC
+            LocalDate today = LocalDate.now();
+            LocalDate oneWeekLater = today.plusDays(7);
 
-            // 1. Get the Borrow Date from ComboBoxes
-            String day = cbDate.getSelectedItem().toString();
-            String month = cbMonth.getSelectedItem().toString();
-            String year = cbYear.getSelectedItem().toString();
-            String dateStr = day + " " + month + " " + year;
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            String borrowDate = today.format(formatter);
+            String dueDate = oneWeekLater.format(formatter);
 
-            // 2. LOGIC: Calculate Due Date (7 Days later)
-            // We convert your selected date into a LocalDate object to do the math
-            try {
-                // Map month name to number for calculation
-                int monthNum = cbMonth.getSelectedIndex() + 1; 
-                LocalDate borrowDate = LocalDate.of(Integer.parseInt(year), monthNum, Integer.parseInt(day));
-                LocalDate dueDate = borrowDate.plusDays(7); // ADD ONE WEEK
-                
-                // Format the due date back to a readable string
-                String dueDateStr = dueDate.getDayOfMonth() + " " + dueDate.getMonth().name() + " " + dueDate.getYear();
-
-                // 3. Call the updated borrow method in DatabaseHandler
-                DatabaseHandler.borrowBook(id, borrowerName, borrowerProgram, dateStr, dueDateStr);
-
-                // 4. UI Feedback & Cleanup
-                DatabaseHandler.loadAvailableBooks(bookTable, "");
-                nameOfBorrower.setText("");
-                programOfTheBorrower.setText("");
-                
-                javax.swing.JOptionPane.showMessageDialog(this, 
-                        "Borrowed successfully!\nDue Date: " + dueDateStr);
-                
-            } catch (Exception e) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Invalid Date Selected!");
-            }
+            DatabaseHandler.borrowBook(id, borrower, program, borrowDate, dueDate);
+            DatabaseHandler.loadAvailableBooks(bookTable, "");
             
+            JOptionPane.showMessageDialog(this, "Success!\nDue Date: " + dueDate);
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first!");
+            JOptionPane.showMessageDialog(this, "Please select a book first.");
         }
     }//GEN-LAST:event_btnBorrowActionPerformed
 
@@ -271,8 +158,8 @@ public class borrowPage extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-        String query = btnSearch.getText();
-    DatabaseHandler.loadAvailableBooks(bookTable, query);
+       String query = txtFBorrow.getText();
+        DatabaseHandler.loadAvailableBooks(bookTable, query);
     }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
@@ -305,15 +192,7 @@ public class borrowPage extends javax.swing.JFrame {
     private javax.swing.JButton btnBorrow;
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JComboBox<String> cbDate;
-    private javax.swing.JComboBox<String> cbMonth;
-    private javax.swing.JComboBox<String> cbYear;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField nameOfBorrower;
-    private javax.swing.JTextField programOfTheBorrower;
     private javax.swing.JTextField txtFBorrow;
     // End of variables declaration//GEN-END:variables
 }

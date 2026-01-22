@@ -10,4 +10,5 @@
 public class userSession {
     public static int currentUserId = -1; // -1 means no user is logged in
     public static String currentUsername = "";
+    public static String currentUserProgram = ""; // ADD THIS
 }
