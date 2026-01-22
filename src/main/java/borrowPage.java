@@ -2,7 +2,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 /**
  *
  * @author Patrick
@@ -26,7 +27,7 @@ public class borrowPage extends javax.swing.JFrame {
     }
     private void populateDateSelectors() {
     
-    cbDate.removeAllItems();
+   cbDate.removeAllItems();
     for (int i = 1; i <= 31; i++) {
         cbDate.addItem(String.valueOf(i));
     }
@@ -39,7 +40,8 @@ public class borrowPage extends javax.swing.JFrame {
     }
 
     cbYear.removeAllItems();
-    for (int i = 2026; i <= 2026; i++) {
+    // Adjusted to current and next year
+    for (int i = 2025; i <= 2026; i++) {
         cbYear.addItem(String.valueOf(i));
     }
 }
@@ -213,39 +215,53 @@ public class borrowPage extends javax.swing.JFrame {
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
         // TODO add your handling code hereint selectedRow = tblBooks.getSelectedRow();
-  int selectedRow = bookTable.getSelectedRow(); 
+ int selectedRow = bookTable.getSelectedRow(); 
 
-    if (selectedRow != -1) {
-        // 1. Get the ID as a String instead of an int
-        String id = bookTable.getValueAt(selectedRow, 0).toString();
+        if (selectedRow != -1) {
+            String id = bookTable.getValueAt(selectedRow, 0).toString();
+            String borrowerName = nameOfBorrower.getText().trim(); 
+            String borrowerProgram = programOfTheBorrower.getText().trim();    
 
-        String borrowerName = nameOfBorrower.getText().trim(); 
-        String borrowerProgram = programOfTheBorrower.getText().trim();    
+            if(borrowerName.isEmpty() || borrowerProgram.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Please enter Borrower Name and Program!");
+                return;
+            }
 
-        if(borrowerName.isEmpty() || borrowerProgram.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Please enter Borrower Name and Program!");
-            return;
+            // 1. Get the Borrow Date from ComboBoxes
+            String day = cbDate.getSelectedItem().toString();
+            String month = cbMonth.getSelectedItem().toString();
+            String year = cbYear.getSelectedItem().toString();
+            String dateStr = day + " " + month + " " + year;
+
+            // 2. LOGIC: Calculate Due Date (7 Days later)
+            // We convert your selected date into a LocalDate object to do the math
+            try {
+                // Map month name to number for calculation
+                int monthNum = cbMonth.getSelectedIndex() + 1; 
+                LocalDate borrowDate = LocalDate.of(Integer.parseInt(year), monthNum, Integer.parseInt(day));
+                LocalDate dueDate = borrowDate.plusDays(7); // ADD ONE WEEK
+                
+                // Format the due date back to a readable string
+                String dueDateStr = dueDate.getDayOfMonth() + " " + dueDate.getMonth().name() + " " + dueDate.getYear();
+
+                // 3. Call the updated borrow method in DatabaseHandler
+                DatabaseHandler.borrowBook(id, borrowerName, borrowerProgram, dateStr, dueDateStr);
+
+                // 4. UI Feedback & Cleanup
+                DatabaseHandler.loadAvailableBooks(bookTable, "");
+                nameOfBorrower.setText("");
+                programOfTheBorrower.setText("");
+                
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                        "Borrowed successfully!\nDue Date: " + dueDateStr);
+                
+            } catch (Exception e) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Invalid Date Selected!");
+            }
+            
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first!");
         }
-
-        String dateStr = cbDate.getSelectedItem() + " " + 
-                         cbMonth.getSelectedItem() + " " + 
-                         cbYear.getSelectedItem();
-
-        // 2. Call the updated borrow method
-        DatabaseHandler.borrowBook(id, borrowerName, borrowerProgram, dateStr);
-
-        // 3. Refresh the table to show only the remaining AVAILABLE books
-        DatabaseHandler.loadAvailableBooks(bookTable, "");
-        
-        // 4. Clear the text fields
-        nameOfBorrower.setText("");
-        programOfTheBorrower.setText("");
-        
-        javax.swing.JOptionPane.showMessageDialog(this, "Book ID " + id + " borrowed successfully by " + borrowerName);
-        
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first!");
-    }
     }//GEN-LAST:event_btnBorrowActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
