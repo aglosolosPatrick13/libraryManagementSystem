@@ -21,6 +21,7 @@ public class homePage extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         DatabaseHandler.searchAndLoadTable(bookTable, "");
         DatabaseHandler.initializeDatabase();
+         bookTable.setAutoCreateRowSorter(true); 
     }
 
     /**
