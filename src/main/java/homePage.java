@@ -108,7 +108,7 @@ public class homePage extends javax.swing.JFrame {
         btnRemove.addActionListener(this::btnRemoveActionPerformed);
 
         btnClose.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnClose.setText("Close");
+        btnClose.setText("Logout");
         btnClose.addActionListener(this::btnCloseActionPerformed);
 
         btnSort.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
