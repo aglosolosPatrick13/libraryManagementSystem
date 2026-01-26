@@ -3,8 +3,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JTable;
 import java.util.ArrayList;
 import java.util.List;
-import java.time.LocalDate; // Added for automatic date math
-import java.time.temporal.ChronoUnit; // Added to calculate days between dates
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class DatabaseHandler {
     private static final String URL = "jdbc:sqlite:library_db.db";
@@ -34,7 +34,7 @@ public class DatabaseHandler {
                     + "due_date TEXT,"
                     + "borrower_id INTEGER);");
             
- 
+            // Migration handling (in case columns were missing from previous versions)
             try { stmt.execute("ALTER TABLE books ADD COLUMN borrower_id INTEGER;"); } catch (SQLException e) {}
             try { stmt.execute("ALTER TABLE books RENAME COLUMN year TO year_published;"); } catch (SQLException e) {}
             try { stmt.execute("ALTER TABLE users ADD COLUMN program TEXT;"); } catch (SQLException e) {}
@@ -45,11 +45,10 @@ public class DatabaseHandler {
         }
     }
 
-
     private static void loadFilteredTable(JTable table, String sql, String keyword, boolean isPersonal) {
-        // Updated Column Header to show "Days Left" instead of just the static Due Date
         String[] columns = {"Book ID", "Book Name", "Author", "Genre", "Year Published", "Status", "Days Remaining"};
         DefaultTableModel model = new DefaultTableModel(columns, 0);
+        
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             int paramIndex = 1;
             if (isPersonal) { pstmt.setInt(paramIndex++, userSession.currentUserId); }
@@ -62,7 +61,6 @@ public class DatabaseHandler {
             
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-
                 String dueDateStr = rs.getString("due_date");
                 String daysDisplay = "N/A"; 
 
@@ -83,7 +81,6 @@ public class DatabaseHandler {
                         daysDisplay = dueDateStr; 
                     }
                 }
- 
 
                 model.addRow(new Object[]{
                     rs.getString("id"), rs.getString("name"), rs.getString("author"),
@@ -96,17 +93,17 @@ public class DatabaseHandler {
     }
 
     public static void searchAndLoadTable(JTable table, String keyword) {
-        String sql = "SELECT * FROM books WHERE (name LIKE ? OR author LIKE ? OR id LIKE ? OR genre LIKE ? OR year_published LIKE ?)";
+        String sql = "SELECT * FROM books WHERE (name LIKE ? OR author LIKE ? OR id LIKE ? OR genre LIKE ? OR CAST(year_published AS TEXT) LIKE ?)";
         loadFilteredTable(table, sql, keyword, false);
     }
 
     public static void loadAvailableBooks(JTable table, String keyword) {
-        String sql = "SELECT * FROM books WHERE status = 'Available' AND (name LIKE ? OR author LIKE ? OR id LIKE ? OR genre LIKE ? OR year_published LIKE ?)";
+        String sql = "SELECT * FROM books WHERE status = 'Available' AND (name LIKE ? OR author LIKE ? OR id LIKE ? OR genre LIKE ? OR CAST(year_published AS TEXT) LIKE ?)";
         loadFilteredTable(table, sql, keyword, false);
     }
 
     public static void loadBorrowedBooks(JTable table, String keyword) {
-        String sql = "SELECT * FROM books WHERE status = 'Borrowed' AND borrower_id = ? AND (name LIKE ? OR author LIKE ? OR id LIKE ? OR genre LIKE ? OR year_published LIKE ?)";
+        String sql = "SELECT * FROM books WHERE status = 'Borrowed' AND borrower_id = ? AND (name LIKE ? OR author LIKE ? OR id LIKE ? OR genre LIKE ? OR CAST(year_published AS TEXT) LIKE ?)";
         loadFilteredTable(table, sql, keyword, true);
     }
 
@@ -135,8 +132,7 @@ public class DatabaseHandler {
             System.out.println("Table Error: " + e.getMessage()); 
         }
     }
-
-    // --- Action Methods ---
+    
     public static void addBook(String id, String name, String author, String genre, int year) {
         String sql = "INSERT INTO books(id, name, author, genre, year_published, status) VALUES(?,?,?,?,?,'Available')";
         try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -201,7 +197,6 @@ public class DatabaseHandler {
         return false;
     }
 
- 
     public static void heapSort(Object[][] data, int column) {
         int n = data.length;
         for (int i = n / 2 - 1; i >= 0; i--) heapify(data, n, i, column);

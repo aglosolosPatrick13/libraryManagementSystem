@@ -21,7 +21,7 @@ public class homePage extends javax.swing.JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         DatabaseHandler.searchAndLoadTable(bookTable, "");
         DatabaseHandler.initializeDatabase();
-         bookTable.setAutoCreateRowSorter(true); 
+        bookTable.setAutoCreateRowSorter(true); 
     }
 
     /**
@@ -41,7 +41,7 @@ public class homePage extends javax.swing.JFrame {
         btnReturn = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
         btnRemove = new javax.swing.JButton();
-        btnClose = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         btnSort = new javax.swing.JButton();
         btnNotice = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -108,9 +108,9 @@ public class homePage extends javax.swing.JFrame {
         btnRemove.setText("Remove");
         btnRemove.addActionListener(this::btnRemoveActionPerformed);
 
-        btnClose.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        btnClose.setText("Logout");
-        btnClose.addActionListener(this::btnCloseActionPerformed);
+        btnLogout.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btnLogout.setText("Logout");
+        btnLogout.addActionListener(this::btnLogoutActionPerformed);
 
         btnSort.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnSort.setText("Refresh");
@@ -152,7 +152,7 @@ public class homePage extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28)
-                                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 567, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(28, 28, 28))))
         );
@@ -174,7 +174,7 @@ public class homePage extends javax.swing.JFrame {
                     .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBorrow, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18))
@@ -183,10 +183,21 @@ public class homePage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
-    }//GEN-LAST:event_btnCloseActionPerformed
+    int confirm = javax.swing.JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to logout?", "Logout", 
+            javax.swing.JOptionPane.YES_NO_OPTION);
+
+    if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+        userSession.currentUserId = -1;
+        userSession.currentUsername = "";
+        userSession.currentUserProgram = "";
+        this.dispose();
+        new loginPage().setVisible(true);
+    }
+        
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
         // TODO add your handling code here:
@@ -235,8 +246,8 @@ public class homePage extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
-        // TODO add your handling code here:int selectedRow = tblBooks.getSelectedRow();
-  int selectedRow = bookTable.getSelectedRow(); 
+        // TODO add your handling code here:
+    int selectedRow = bookTable.getSelectedRow(); 
 
     if (selectedRow != -1) {
 
@@ -298,7 +309,7 @@ public class homePage extends javax.swing.JFrame {
     private javax.swing.JTable bookTable;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnBorrow;
-    private javax.swing.JButton btnClose;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnNotice;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnReturn;

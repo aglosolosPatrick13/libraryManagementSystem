@@ -126,28 +126,27 @@ public class borrowPage extends javax.swing.JFrame {
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
         // TODO add your handling code here:
-   int selectedRow = bookTable.getSelectedRow(); 
+   int selectedRow = bookTable.getSelectedRow();
+    
+    if (selectedRow != -1) {
+        String bookId = bookTable.getValueAt(selectedRow, 0).toString();
+        LocalDate today = LocalDate.now();
+        LocalDate dueDate = today.plusDays(7);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        if (selectedRow != -1) {
-            String id = bookTable.getValueAt(selectedRow, 0).toString();
-            String borrower = userSession.currentUsername;
-            String program = userSession.currentUserProgram;
+        DatabaseHandler.borrowBook(
+            bookId, 
+            userSession.currentUsername, 
+            userSession.currentUserProgram, 
+            today.format(formatter), 
+            dueDate.format(formatter)
+        );
 
-            // AUTOMATIC 7-DAY LOGIC
-            LocalDate today = LocalDate.now();
-            LocalDate oneWeekLater = today.plusDays(7);
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String borrowDate = today.format(formatter);
-            String dueDate = oneWeekLater.format(formatter);
-
-            DatabaseHandler.borrowBook(id, borrower, program, borrowDate, dueDate);
-            DatabaseHandler.loadAvailableBooks(bookTable, "");
-            
-            JOptionPane.showMessageDialog(this, "Success!\nDue Date: " + dueDate);
-        } else {
-            JOptionPane.showMessageDialog(this, "Please select a book first.");
-        }
+        DatabaseHandler.loadAvailableBooks(bookTable, "");
+        javax.swing.JOptionPane.showMessageDialog(this, "Book borrowed successfully! Due in 7 days.");
+    } else {
+        javax.swing.JOptionPane.showMessageDialog(this, "Please select a book from the table first.");
+    }
     }//GEN-LAST:event_btnBorrowActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
