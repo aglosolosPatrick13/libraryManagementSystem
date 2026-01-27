@@ -143,7 +143,7 @@ public class loginPage extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
-       String user = tfProgram.getText();
+       String user = tfUsername1.getText();
     String pass = new String(tfPassword.getPassword());
 
     if (DatabaseHandler.verifyLogin(user, pass)) {

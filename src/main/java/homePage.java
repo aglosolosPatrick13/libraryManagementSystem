@@ -185,7 +185,11 @@ public class homePage extends javax.swing.JFrame {
 
     private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
         // TODO add your handling code here:
-        System.exit(0);
+    userSession.currentUserId = -1;
+    userSession.currentUsername = "";
+    userSession.currentUserProgram = "";
+    new loginPage().setVisible(true);
+    this.dispose();
     }//GEN-LAST:event_btnCloseActionPerformed
 
     private void btnBorrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowActionPerformed
